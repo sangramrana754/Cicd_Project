@@ -40,15 +40,14 @@ jobs:
 
         echo "  StrictHostKeyChecking no" >> ~/.ssh/config
  
-    - name: SSH into EC2 and deploy container
-
-      run: |
-
-        ssh -tt ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-
-        sudo docker pull ${{ secrets.DOCKER_IMAGE }}
-
-        sudo docker run -d e0baa3b075e8
-
-        EOF
+         - name: SSH into EC2 and deploy container
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+            docker pull ${{ secrets.DOCKER_IMAGE }} || exit 1
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d -p 8080:80 ${{ secrets.DOCKER_IMAGE }} || exit 1
+            docker ps -a
+            docker logs myapp || true
+          EOF
  
