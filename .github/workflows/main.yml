@@ -48,7 +48,7 @@ jobs:
 
         sudo docker pull ${{ secrets.DOCKER_IMAGE }}
 
-        sudo docker run -d ${{ secrets.DOCKER_IMAGE }}
+        sudo docker run -d e0baa3b075e8
 
         EOF
  
